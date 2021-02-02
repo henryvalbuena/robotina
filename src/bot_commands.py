@@ -1,5 +1,7 @@
 from discord.ext import commands
 
+from formatting.markdown import MD
+
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
@@ -27,17 +29,33 @@ class Greetings(commands.Cog):
     async def salut(self, ctx):
         await ctx.send(f"Hello {ctx.author}")
 
-    @commands.command(aliases=["ft"])
-    async def format(self, ctx):
-        await ctx.send(f"```Hello {ctx.author}```")
+    @commands.command(aliases=["ft_b"])
+    async def format_b(self, ctx):
+        await ctx.send(MD.bold(f"Hello {ctx.author}"))
+
+    @commands.command(aliases=["ft_i"])
+    async def format_i(self, ctx):
+        await ctx.send(MD.italics(f"Hello {ctx.author}"))
+
+    @commands.command(aliases=["ft_u"])
+    async def format_u(self, ctx):
+        await ctx.send(MD.underline(f"Hello {ctx.author}"))
 
     @commands.command(aliases=["qt"])
     async def quote(self, ctx):
-        await ctx.send(f"> Hello {ctx.author}")
+        await ctx.send(MD.quote_block(f"Hello {ctx.author}"))
 
-    @commands.command(aliases=["md"])
-    async def markdown(self, ctx):
-        await ctx.send("```JavaScript\nhelloWorld```")
+    @commands.command(aliases=["qts"])
+    async def quotes(self, ctx):
+        await ctx.send(MD.quote_blocks(f"Hello {ctx.author}"))
+
+    @commands.command(aliases=["cd"])
+    async def code(self, ctx):
+        await ctx.send(MD.code_blocks("JavaScript\nhelloWorld"))
+
+    @commands.command(aliases=["cmp"])
+    async def comp(self, ctx):
+        await ctx.send(MD.quote_blocks(MD.bold("JavaScript") + "\nhelloWorld"))
 
 
 class Math(commands.Cog):
