@@ -1,11 +1,15 @@
 from discord.ext import commands
 
 from formatting.markdown import MD
+from logger import logging
+
+logger = logging.getLogger(f"robotina.{__name__}")
 
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        logger.debug(f"{self.__class__.__name__} initialized")
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -15,6 +19,7 @@ class CommandErrorHandler(commands.Cog):
 class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        logger.debug(f"{self.__class__.__name__} initialized")
 
     @commands.command(aliases=["stat", "st"])
     async def status(self, ctx):
@@ -24,43 +29,17 @@ class Status(commands.Cog):
 class Greetings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        logger.debug(f"{self.__class__.__name__} initialized")
 
     @commands.command()
     async def salut(self, ctx):
         await ctx.send(f"Hello {ctx.author}")
 
-    @commands.command(aliases=["ft_b"])
-    async def format_b(self, ctx):
-        await ctx.send(MD.bold(f"Hello {ctx.author}"))
-
-    @commands.command(aliases=["ft_i"])
-    async def format_i(self, ctx):
-        await ctx.send(MD.italics(f"Hello {ctx.author}"))
-
-    @commands.command(aliases=["ft_u"])
-    async def format_u(self, ctx):
-        await ctx.send(MD.underline(f"Hello {ctx.author}"))
-
-    @commands.command(aliases=["qt"])
-    async def quote(self, ctx):
-        await ctx.send(MD.quote_block(f"Hello {ctx.author}"))
-
-    @commands.command(aliases=["qts"])
-    async def quotes(self, ctx):
-        await ctx.send(MD.quote_blocks(f"Hello {ctx.author}"))
-
-    @commands.command(aliases=["cd"])
-    async def code(self, ctx):
-        await ctx.send(MD.code_blocks("JavaScript\nhelloWorld"))
-
-    @commands.command(aliases=["cmp"])
-    async def comp(self, ctx):
-        await ctx.send(MD.quote_blocks(MD.bold("JavaScript") + "\nhelloWorld"))
-
 
 class Math(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        logger.debug(f"{self.__class__.__name__} initialized")
 
     @commands.command()
     async def sum(self, ctx, a: int, b: int):
@@ -79,4 +58,45 @@ class Math(commands.Cog):
         await ctx.send(f"Mul {a} * {b} = {a * b}")
 
 
-COGS = [Math, Greetings, CommandErrorHandler, Status]
+class Tests(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        logger.debug(f"{self.__class__.__name__} initialized")
+
+    @commands.command()
+    async def notify(self, ctx):
+        await ctx.send(
+            MD.card(
+                {
+                    "title": "Server Response",
+                    "body": "Press !st\nThen after that, you should be able to\ndepear lorem ipsum",
+                    "link": "https://www.google.com"
+                }
+            )
+        )
+
+    @commands.command()
+    async def echo(self, ctx, title, body, link=None):
+        await ctx.send(
+            MD.card(
+                {
+                    "title": title,
+                    "body": body,
+                    "link": "" if link is None else link
+                }
+            )
+        )
+
+    @commands.command(aliases=["em", "emb"])
+    async def embed(self, ctx):
+        struct = {
+            "title": "Terminator",
+            "description": "A human soldier is sent from 2029 to 1984 to stop an almost indestructible cyborg killing machine, sent from the same year, which has been programmed to execute a young woman whose unborn son is the key to humanity's future salvation.",
+            "url": "https://www.imdb.com/title/tt0088247/",
+            "thumbnail": ""
+        }
+
+        await ctx.send(embed=MD.embed(**struct))
+
+
+COGS = [Math, Greetings, CommandErrorHandler, Status, Tests]

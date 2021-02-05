@@ -1,7 +1,7 @@
 import logging
 
 f_formattter = '%(asctime)s:%(levelname)s:%(name)s: %(message)s'
-c_formatter = '[%(asctime)s] [%(levelname)-8s] >%(name)-12s: %(message)s'
+c_formatter = '[%(asctime)s] [%(levelname)-8s]> %(name)-12s: %(message)s'
 logger = logging.getLogger('')
 logger.setLevel(logging.DEBUG)
 
