@@ -1,0 +1,15 @@
+{
+  "name": "robotina",
+  "version": "1.0.0",
+  "description": "discord bot",
+  "main": "./src/start.py",
+  "scripts": {
+    "dev": "nodemon ./src/start.py"
+  },
+  "repository": "git@github.com:henryvalbuena/robotina.git",
+  "author": "Henry Valbuena <dev.henryvm@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
