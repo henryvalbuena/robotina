@@ -2,6 +2,7 @@ from discord.ext import commands
 
 from formatting.markdown import MD
 from logger import logging
+from sound import play_song, stop_song
 
 logger = logging.getLogger(f"robotina.{__name__}")
 
@@ -34,6 +35,25 @@ class Greetings(commands.Cog):
     @commands.command(aliases=["hi", "hey"])
     async def salut(self, ctx):
         await ctx.send(f"Hello {ctx.author}")
+
+
+class Sounds(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.process = None
+        logger.debug(f"{self.__class__.__name__} initialized")
+
+    @commands.command()
+    async def play(self, ctx, file=None):
+        await ctx.send("Processing...")
+        self.process = play_song(audio_file=file)
+        await ctx.send("Playing synthwave_cool")
+
+    @commands.command()
+    async def stop(self, ctx):
+        await ctx.send("Processing...")
+        stop_song(process=self.process)
+        await ctx.send("Song stopped")
 
 
 class Tests(commands.Cog):
@@ -71,4 +91,4 @@ class Tests(commands.Cog):
         await ctx.send(embed=MD.embed(**struct))
 
 
-COGS = [Greetings, CommandErrorHandler, Status, Tests]
+COGS = [Greetings, CommandErrorHandler, Status, Sounds, Tests]
