@@ -13,7 +13,7 @@ def play_song(audio_file):
         process = subprocess.Popen("afplay ./src/sounds/synthwave_cool.mp3", shell=True)
     else:
         process = subprocess.Popen(
-            "ffplay -nodisp -autoexit ./src/sounds/synthwave_cool.mp3", shell=True
+            "ffplay -nodisp -autoexit ./src/sounds/synthwave_cool.mp3 > /dev/null 2>&1", shell=True
         )
 
     logger.info(f"play_song subprocess {process}")
@@ -22,7 +22,12 @@ def play_song(audio_file):
 
 
 def stop_song(process):
+    sys = platform.system()
+
     process.terminate()
     process.wait()
+
+    if sys == "Linux":
+        subprocess.Popen("pkill ffplay", shell=True)
 
     logger.info(f"Subprocess {process} ended")
