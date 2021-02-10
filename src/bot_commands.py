@@ -43,10 +43,10 @@ class Sounds(commands.Cog):
         self.process = None
         logger.debug(f"{self.__class__.__name__} initialized")
 
-    @commands.command()
-    async def play(self, ctx, file=None):
+    @commands.command(aliases=["sl", "zz"])
+    async def sleep(self, ctx):
         await ctx.send("Processing...")
-        self.process = play_song(audio_file=file)
+        self.process = play_song(audio_file="sleep")
         await ctx.send("Playing synthwave_cool")
 
     @commands.command()

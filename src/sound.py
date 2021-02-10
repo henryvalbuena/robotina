@@ -4,16 +4,20 @@ import platform
 from logger import logging
 
 logger = logging.getLogger(f"robotina.{__name__}")
+sound_lib_path = "/media/ext-drive/Roy/Downloads/sounds/"
+sound_li_ls = {
+    "sleep": sound_lib_path + "sl_eight_h_sound.mp4"
+}
 
 
 def play_song(audio_file):
     sys = platform.system()
 
     if sys == 'Darwin':
-        process = subprocess.Popen("afplay ./src/sounds/synthwave_cool.mp3", shell=True)
+        process = subprocess.Popen(f"afplay {sound_li_ls[audio_file]}", shell=True)
     else:
         process = subprocess.Popen(
-            "ffplay -nodisp -autoexit ./src/sounds/synthwave_cool.mp3 > /dev/null 2>&1", shell=True
+            f"ffplay -nodisp -autoexit {sound_li_ls[audio_file]} > /dev/null 2>&1", shell=True
         )
 
     logger.info(f"play_song subprocess {process}")
