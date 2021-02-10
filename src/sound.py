@@ -1,4 +1,5 @@
 import subprocess
+import platform
 
 from logger import logging
 
@@ -6,9 +7,11 @@ logger = logging.getLogger(f"robotina.{__name__}")
 
 
 def play_song(audio_file):
-    try:
+    sys = platform.system()
+
+    if sys == 'Darwin':
         process = subprocess.Popen("afplay ./src/sounds/synthwave_cool.mp3", shell=True)
-    except:
+    else:
         process = subprocess.Popen(
             "ffplay -nodisp -autoexit ./src/sounds/synthwave_cool.mp3", shell=True
         )
