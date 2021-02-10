@@ -1,3 +1,5 @@
+import subprocess
+
 from discord.ext import commands
 
 from formatting.markdown import MD
@@ -48,6 +50,11 @@ class Sounds(commands.Cog):
         await ctx.send("Processing...")
         self.process = play_song(audio_file="sleep")
         await ctx.send("Playing synthwave_cool")
+
+    @commands.command(aliases=["lbt"])
+    async def load_bt(self, ctx):
+        process = subprocess.Popen("pactl load-module module-bluetooth-discover", shell=True)
+        await ctx.send(process)
 
     @commands.command()
     async def stop(self, ctx):
