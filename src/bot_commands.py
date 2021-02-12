@@ -49,12 +49,13 @@ class Sounds(commands.Cog):
     async def sleep(self, ctx):
         await ctx.send("Processing...")
         self.process = play_song(audio_file="sleep")
-        await ctx.send("Playing synthwave_cool")
+        await ctx.send("Playing sleeping song")
 
     @commands.command(aliases=["lbt"])
     async def load_bt(self, ctx):
-        process = subprocess.Popen("pactl load-module module-bluetooth-discover", shell=True)
-        await ctx.send(process)
+        subprocess.Popen("pactl load-module module-bluetooth-discover", shell=True)
+        subprocess.Popen("pacmd set-default-sink bluez_sink.08_EB_ED_79_EF_8A.a2dp_sink", shell=True)
+        await ctx.send("BT loaded")
 
     @commands.command()
     async def stop(self, ctx):
