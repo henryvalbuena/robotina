@@ -53,17 +53,40 @@ class Sounds(commands.Cog):
 
     @commands.command(aliases=["lbt"])
     async def load_bt(self, ctx):
-        msg = subprocess.run("pactl load-module module-bluetooth-discover", capture_output=True, shell=True)
+        msg = subprocess.run(
+            "pactl load-module module-bluetooth-discover", capture_output=True, shell=True
+        )
         logger.info(msg)
-        if (msg.returncode > 1):
+        if msg.returncode < 1:
             await ctx.send("BT loaded")
         else:
-            await ctx.send(str(msg.stderr))
+            await ctx.send(msg.stderr.decode("utf-8"))
 
     @commands.command(aliases=["df"])
     async def default_bt(self, ctx):
-        subprocess.Popen("pacmd set-default-sink bluez_sink.08_EB_ED_79_EF_8A.a2dp_sink", shell=True)
-        await ctx.send("BT default")
+        msg = subprocess.run(
+            "pacmd set-default-sink bluez_sink.08_EB_ED_79_EF_8A.a2dp_sink",
+            capture_output=True,
+            shell=True,
+        )
+        logger.info(msg)
+        if msg.returncode < 1:
+            await ctx.send("BT default")
+        else:
+            await ctx.send(msg.stderr.decode("utf-8"))
+
+    @commands.command(aliases=["rpa"])
+    async def restart_pa(self, ctx):
+        kill = subprocess.run("pulseaudio -k", capture_output=True, shell=True,)
+        logger.info(kill)
+        start = subprocess.run("pulseaudio --start", capture_output=True, shell=True,)
+        logger.info(start)
+        if kill.returncode < 1 and start.returncode < 1:
+            await ctx.send("pulseaudio restarted")
+        elif kill.returncode > 0:
+            await ctx.send(kill.stderr.decode("utf-8"))
+        else:
+            await ctx.send(start.stderr.decode("utf-8"))
 
     @commands.command()
     async def stop(self, ctx):
