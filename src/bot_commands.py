@@ -54,10 +54,11 @@ class Sounds(commands.Cog):
     @commands.command(aliases=["lbt"])
     async def load_bt(self, ctx):
         msg = subprocess.run("pactl load-module module-bluetooth-discover", capture_output=True, shell=True)
+        logger.info(msg)
         if (msg.returncode > 1):
             await ctx.send("BT loaded")
         else:
-            await ctx.send(msg.stderr)
+            await ctx.send(str(msg.stderr))
 
     @commands.command(aliases=["df"])
     async def default_bt(self, ctx):
