@@ -53,9 +53,12 @@ class Sounds(commands.Cog):
 
     @commands.command(aliases=["lbt"])
     async def load_bt(self, ctx):
-        subprocess.Popen("pactl load-module module-bluetooth-discover", shell=True)
-        await ctx.send("BT loaded")
-    
+        msg = subprocess.run("pactl load-module module-bluetooth-discover", capture_output=True, shell=True)
+        if (msg.returncode > 1):
+            await ctx.send("BT loaded")
+        else:
+            await ctx.send(msg.stderr)
+
     @commands.command(aliases=["df"])
     async def default_bt(self, ctx):
         subprocess.Popen("pacmd set-default-sink bluez_sink.08_EB_ED_79_EF_8A.a2dp_sink", shell=True)
