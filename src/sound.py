@@ -43,7 +43,7 @@ def tts(text):
             f"espeak '{text}'", capture_output=True, shell=True
         )
 
-        if msg.returncode < 1:
-            return "speaking.."
+        if msg.returncode > 1:
+            return "done!"
         else:
             return msg.stderr.decode("utf-8")
