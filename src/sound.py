@@ -40,7 +40,7 @@ def stop_song(process):
 def tts(text):
     if isinstance(text, str):
         msg = subprocess.run(
-            f"espeak {text}", capture_output=True, shell=True
+            f"espeak '{text}'", capture_output=True, shell=True
         )
 
         if msg.returncode < 1:
