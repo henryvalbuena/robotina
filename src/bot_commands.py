@@ -1,10 +1,9 @@
-import subprocess
-
 from discord.ext import commands
 
 from formatting.markdown import MD
 from logger import logging
 from sound import play_song, stop_song
+from helpers import restart_pulseaudio, load_module_bluetooth, default_to_bluetooth
 
 logger = logging.getLogger(f"robotina.{__name__}")
 
@@ -51,42 +50,28 @@ class Sounds(commands.Cog):
         self.process = play_song(audio_file="sleep")
         await ctx.send("Playing sleeping song")
 
+    @commands.command(aliases=["lbt.sl", "lbt.zz"])
+    async def lbt_sleep(self, ctx):
+        await ctx.send("Processing...")
+        msg = load_module_bluetooth()
+        await ctx.send(msg)
+        self.process = play_song(audio_file="sleep")
+        await ctx.send("Playing sleeping song")
+
     @commands.command(aliases=["lbt"])
     async def load_bt(self, ctx):
-        msg = subprocess.run(
-            "pactl load-module module-bluetooth-discover", capture_output=True, shell=True
-        )
-        logger.info(msg)
-        if msg.returncode < 1:
-            await ctx.send("BT loaded")
-        else:
-            await ctx.send(msg.stderr.decode("utf-8"))
+        msg = load_module_bluetooth()
+        await ctx.send(msg)
 
     @commands.command(aliases=["df"])
     async def default_bt(self, ctx):
-        msg = subprocess.run(
-            "pacmd set-default-sink bluez_sink.08_EB_ED_79_EF_8A.a2dp_sink",
-            capture_output=True,
-            shell=True,
-        )
-        logger.info(msg)
-        if msg.returncode < 1:
-            await ctx.send("BT default")
-        else:
-            await ctx.send(msg.stderr.decode("utf-8"))
+        msg = default_to_bluetooth()
+        await ctx.send(msg)
 
     @commands.command(aliases=["rpa"])
     async def restart_pa(self, ctx):
-        kill = subprocess.run("pulseaudio -k", capture_output=True, shell=True,)
-        logger.info(kill)
-        start = subprocess.run("pulseaudio --start", capture_output=True, shell=True,)
-        logger.info(start)
-        if kill.returncode < 1 and start.returncode < 1:
-            await ctx.send("pulseaudio restarted")
-        elif kill.returncode > 0:
-            await ctx.send(kill.stderr.decode("utf-8"))
-        else:
-            await ctx.send(start.stderr.decode("utf-8"))
+        msg = restart_pulseaudio()
+        await ctx.send(msg)
 
     @commands.command()
     async def stop(self, ctx):
