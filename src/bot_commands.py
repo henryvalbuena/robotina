@@ -1,8 +1,9 @@
+from logging import info
 from discord.ext import commands
 
 from formatting.markdown import MD
 from logger import logging
-from sound import play_song, stop_song
+from sound import play_song, stop_song, tts
 from helpers import restart_pulseaudio, load_module_bluetooth, default_to_bluetooth
 
 logger = logging.getLogger(f"robotina.{__name__}")
@@ -78,6 +79,12 @@ class Sounds(commands.Cog):
         await ctx.send("Processing...")
         stop_song(process=self.process)
         await ctx.send("Song stopped")
+
+    @commands.command(aliases=["say"])
+    async def speak(self, ctx, *args):
+        msg = " ".join(args)
+        res = tts(msg)
+        await ctx.send(res)
 
 
 class Tests(commands.Cog):

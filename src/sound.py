@@ -35,3 +35,15 @@ def stop_song(process):
         subprocess.Popen("pkill ffplay", shell=True)
 
     logger.info(f"Subprocess {process} ended")
+
+
+def tts(text):
+    if isinstance(text, str):
+        msg = subprocess.run(
+            f"espeak {text}", capture_output=True, shell=True
+        )
+
+        if msg.returncode < 1:
+            return "speaking.."
+        else:
+            return msg.stderr.decode("utf-8")
