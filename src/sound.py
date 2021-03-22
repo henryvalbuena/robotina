@@ -6,7 +6,8 @@ from logger import logging
 logger = logging.getLogger(f"robotina.{__name__}")
 sound_lib_path = "/media/ext-drive/Roy/Downloads/sounds/"
 sound_li_ls = {
-    "sleep": sound_lib_path + "sl_eight_h_sound.mp4"
+    "sleep": sound_lib_path + "sl_eight_h_sound.mp4",
+    "sleep_long": sound_lib_path + "full_sleep_ten.mp4"
 }
 
 

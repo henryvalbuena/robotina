@@ -51,6 +51,12 @@ class Sounds(commands.Cog):
         self.process = play_song(audio_file="sleep")
         await ctx.send("Playing sleeping song")
 
+    @commands.command(aliases=["sll", "zzl"])
+    async def sleep_long(self, ctx):
+        await ctx.send("Processing...")
+        self.process = play_song(audio_file="sleep_long")
+        await ctx.send("Playing sleeping song")
+
     @commands.command(aliases=["lbt.sl", "lbt.zz"])
     async def lbt_sleep(self, ctx):
         await ctx.send("Processing...")
