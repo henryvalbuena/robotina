@@ -1,7 +1,10 @@
+from logging import info
 from discord.ext import commands
 
 from formatting.markdown import MD
 from logger import logging
+from sound import play_song, stop_song, tts
+from helpers import restart_pulseaudio, load_module_bluetooth, default_to_bluetooth
 
 logger = logging.getLogger(f"robotina.{__name__}")
 
@@ -34,6 +37,60 @@ class Greetings(commands.Cog):
     @commands.command(aliases=["hi", "hey"])
     async def salut(self, ctx):
         await ctx.send(f"Hello {ctx.author}")
+
+
+class Sounds(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.process = None
+        logger.debug(f"{self.__class__.__name__} initialized")
+
+    @commands.command(aliases=["sl", "zz"])
+    async def sleep(self, ctx):
+        await ctx.send("Processing...")
+        self.process = play_song(audio_file="sleep")
+        await ctx.send("Playing sleeping song")
+
+    @commands.command(aliases=["sll", "zzl"])
+    async def sleep_long(self, ctx):
+        await ctx.send("Processing...")
+        self.process = play_song(audio_file="sleep_long")
+        await ctx.send("Playing sleeping song")
+
+    @commands.command(aliases=["lbt.sl", "lbt.zz"])
+    async def lbt_sleep(self, ctx):
+        await ctx.send("Processing...")
+        msg = load_module_bluetooth()
+        await ctx.send(msg)
+        self.process = play_song(audio_file="sleep")
+        await ctx.send("Playing sleeping song")
+
+    @commands.command(aliases=["lbt"])
+    async def load_bt(self, ctx):
+        msg = load_module_bluetooth()
+        await ctx.send(msg)
+
+    @commands.command(aliases=["df"])
+    async def default_bt(self, ctx):
+        msg = default_to_bluetooth()
+        await ctx.send(msg)
+
+    @commands.command(aliases=["rpa"])
+    async def restart_pa(self, ctx):
+        msg = restart_pulseaudio()
+        await ctx.send(msg)
+
+    @commands.command()
+    async def stop(self, ctx):
+        await ctx.send("Processing...")
+        stop_song(process=self.process)
+        await ctx.send("Song stopped")
+
+    @commands.command(aliases=["say"])
+    async def speak(self, ctx, *args):
+        msg = " ".join(args)
+        res = tts(msg)
+        await ctx.send(res)
 
 
 class Tests(commands.Cog):
@@ -71,4 +128,4 @@ class Tests(commands.Cog):
         await ctx.send(embed=MD.embed(**struct))
 
 
-COGS = [Greetings, CommandErrorHandler, Status, Tests]
+COGS = [Greetings, CommandErrorHandler, Status, Sounds, Tests]
