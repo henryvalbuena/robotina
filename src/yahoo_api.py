@@ -61,10 +61,10 @@ def tokens():
         logger.info("list of tokens in db")
 
         cursor = conn.execute("SELECT * FROM TOKENS")
-        conn.close()
 
         tokens = [{"token": token, "limit": limit} for token, limit in cursor]
 
+        conn.close()
         return tokens
     except Exception as err:
         logger.error(err)
