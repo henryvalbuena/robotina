@@ -4,7 +4,7 @@ from logger import logging
 
 logger = logging.getLogger(f"robotina.{__name__}")
 
-DB = "tokens.db"
+DB = "../tokens.db"
 
 
 def add(token, limit):
