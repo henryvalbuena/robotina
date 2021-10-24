@@ -170,4 +170,4 @@ class Tests(commands.Cog):
         await ctx.send(embed=MD.embed(**struct))
 
 
-COGS = [Greetings, CommandErrorHandler, Status, Sounds, Tests]
+COGS = [Greetings, CommandErrorHandler, Status, Sounds, Tests, YahooAPI]
