@@ -14,7 +14,7 @@ def add(token, limit):
 
         conn.execute(
             f"INSERT INTO TOKENS (TOKEN,LIMITS) \
-            VALUES ({token}, {limit}"
+            VALUES ({token}, {limit})"
         )
         conn.commit()
         conn.close()
