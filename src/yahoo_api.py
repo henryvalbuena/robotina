@@ -13,7 +13,7 @@ def add(token, limit):
         logger.info(f"adding {token} to db")
 
         conn.execute(
-            f"INSERT INTO TOKEN (TOKEN,LIMIT) \
+            f"INSERT INTO TOKENS (TOKEN,LIMITS) \
             VALUES ({token}, {limit}"
         )
         conn.commit()
@@ -30,7 +30,7 @@ def remove(token):
         conn = sqlite3.connect(DB)
         logger.info(f"removing {token} to db")
 
-        conn.execute(f"DELETE from TOKEN where token={token}")
+        conn.execute(f"DELETE from TOKENS where TOKEN={token}")
         conn.commit()
         conn.close()
 
@@ -45,7 +45,7 @@ def update(token, limit):
         conn = sqlite3.connect(DB)
         logger.info(f"updating {token} to db")
 
-        conn.execute(f"UPDATE TOKEN set limit={limit} where token={token}")
+        conn.execute(f"UPDATE TOKENS set LIMITS={limit} where TOKEN={token}")
         conn.commit()
         conn.close()
 
@@ -60,7 +60,7 @@ def tokens():
         conn = sqlite3.connect(DB)
         logger.info("list of tokens in db")
 
-        cursor = conn.execute("SELECT * FROM TOKEN")
+        cursor = conn.execute("SELECT * FROM TOKENS")
         conn.close()
 
         tokens = [{"token": token, "limit": limit} for token, limit in cursor]
