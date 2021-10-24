@@ -1,10 +1,10 @@
-from logging import info
 from discord.ext import commands
 
 from formatting.markdown import MD
 from logger import logging
 from sound import play_song, stop_song, tts
 from helpers import restart_pulseaudio, load_module_bluetooth, default_to_bluetooth
+from yahoo_api import add, update, remove, tokens
 
 logger = logging.getLogger(f"robotina.{__name__}")
 
@@ -91,6 +91,48 @@ class Sounds(commands.Cog):
         msg = " ".join(args)
         res = tts(msg)
         await ctx.send(res)
+
+
+class YahooAPI(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        logger.debug(f"{self.__class__.__name__} initialized")
+
+    @commands.command(aliases=["addToken", "add"])
+    async def add_token(self, ctx, token, limit):
+        await ctx.send(f"Adding {token} with limit of {limit}")
+        self.process = add(token=token, limit=limit)
+        if self.process:
+            await ctx.send("Token added")
+        else:
+            await ctx.send("Token does not exists, please check again.")
+
+    @commands.command(aliases=["removeToken", "remove"])
+    async def remove_token(self, ctx, token):
+        await ctx.send(f"Removing {token}")
+        self.process = remove(token=token)
+        if self.process:
+            await ctx.send("Token removed")
+        else:
+            await ctx.send("Token does not exists, please check again.")
+
+    @commands.command(aliases=["updateToken", "update"])
+    async def update_token(self, ctx, token, limit):
+        await ctx.send(f"Updating {token} with limit of {limit}")
+        self.process = update(token=token, limit=limit)
+        if self.process:
+            await ctx.send("Token updated")
+        else:
+            await ctx.send("Token does not exists, please check again.")
+
+    @commands.command(aliases=["list", "l"])
+    async def list_tokens(self, ctx):
+        await ctx.send("Listing tokens:")
+        self.process = tokens()
+        if self.process:
+            await ctx.send(self.process)
+        else:
+            await ctx.send("No tokens found")
 
 
 class Tests(commands.Cog):
